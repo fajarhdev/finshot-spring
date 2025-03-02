@@ -10,7 +10,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostDTO implements Serializable {
-    private int id;
     private String title;
     private String content;
+    private String password;
+    private String author;
+    private Long id;
+    private String search;
 }
