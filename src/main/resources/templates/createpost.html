@@ -11,6 +11,9 @@
 			rel="stylesheet"
 			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 			crossorigin="anonymous" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+			rel="stylesheet" />
 	</head>
 	<body>
 		<div class="container mt-4">
@@ -62,11 +65,15 @@
 
 				<!-- Content Section -->
 				<div class="mb-3">
-					<textarea
-						class="form-control"
-						rows="6"
-						placeholder="Enter your content here..."
-						th:field="*{content}"></textarea>
+					<!-- Quill Editor -->
+					<div id="editor" class="mb-3"></div>
+
+					<!-- Hidden input to store Quill content -->
+					<input
+						type="hidden"
+						name="content"
+						th:field="*{content}"
+						id="quillContent" />
 				</div>
 
 				<!-- Bottom Buttons -->
@@ -82,5 +89,36 @@
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 			crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+		<script>
+			// Initialize Quill
+			var quill = new Quill("#editor", {
+				modules: {
+					toolbar: [
+						["bold", "italic"],
+						["link", "blockquote", "code-block"],
+						[{ list: "ordered" }, { list: "bullet" }],
+					],
+				},
+				theme: "snow",
+			});
+
+			// Retrieve database content from the hidden input field
+			let content = document.querySelector("#quillContent").value;
+
+			// Set content inside Quill editor (if available)
+			if (content) {
+				quill.clipboard.dangerouslyPasteHTML(content);
+			}
+
+			// Ensure content is saved on form submission
+			document
+				.querySelector("form")
+				.addEventListener("submit", function () {
+					document.querySelector("#quillContent").value =
+						quill.root.innerHTML;
+				});
+		</script>
 	</body>
 </html>
